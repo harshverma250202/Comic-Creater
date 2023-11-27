@@ -3,13 +3,7 @@ import { Input, Button, CircularProgress, Typography, Box } from '@mui/material'
 import ImageWithText from '../../components/ImageWithTextRender';
 import { ComicContext } from '../../utils/ContexApi/ComicContext';
 const ComicCreator = () => {
-
-
-
     const { inputs, images, loading, error, handleSubmit, handleAddInput, handleInputChange } = React.useContext(ComicContext);
-
-
-
     const containerStyle = {
         display: 'flex',
         flexDirection: 'column',
@@ -88,6 +82,11 @@ const ComicCreator = () => {
                     </>
                 ))}
             </div>
+
+            {/* Made By Harsh Verma Github: harshverma250202 */}
+            <Typography variant="body1" style={{ marginTop: '10px' }}>
+                Made By @Harsh Verma, Github: harshverma250202
+            </Typography>
         </Box>
     );
 };

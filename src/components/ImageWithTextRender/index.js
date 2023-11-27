@@ -71,7 +71,6 @@ const ImageWithText = ({ ImageUrl, Prompt, PanelNumber }) => {
                 link.href = dataURL;
                 link.download = 'image_with_text.png';
 
-                // Append the link to the document and trigger a click event
                 document.body.appendChild(link);
                 link.click();
 

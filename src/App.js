@@ -9,7 +9,7 @@ function App() {
     <>
       <PopupProvider>
         <ComicProvider>
-        <Mainpage />
+          <Mainpage />
         </ComicProvider>
       </PopupProvider>
     </>
