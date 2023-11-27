@@ -128,7 +128,10 @@ const ImageWithText = ({ ImageUrl, Prompt, PanelNumber }) => {
                 <Button variant="contained" color="primary" style={{ marginTop: '10px' }} onClick={handleExportToImage}>
                     Export as Image
                 </Button>
-
+                {/* Info: click on Image to add text */}
+                <Typography variant="body1" style={{ marginTop: '10px' }}>
+                    *Click on Image to add text
+                </Typography>
 
             </Box>
 
