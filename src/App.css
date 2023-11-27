@@ -1,59 +1,6 @@
 .App {
   text-align: center;
 }
-
-/* ComicCreator.css */
-
-/* General styling for the form */
 form {
   margin-bottom: 20px;
-}
-
-/* Styling for each input field */
-input[type="text"] {
-  display: block;
-  width: 100%;
-  padding: 10px;
-  margin: 10px 0;
-  box-sizing: border-box;
-}
-
-/* Styling for the submit button */
-button {
-  padding: 10px 20px;
-  background-color: #4CAF50;
-  color: white;
-  border: none;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-button:hover {
-  background-color: #45a049;
-}
-
-button:disabled {
-  background-color: #ccc;
-  cursor: not-allowed;
-}
-
-/* Styling for the error message */
-.error-message {
-  color: red;
-  margin: 10px 0;
-}
-
-/* Styling for the comic panel display area */
-.comic-panel {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  gap: 10px;
-}
-
-.comic-panel img {
-  width: 100%;
-  height: auto;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  padding: 5px;
 }

@@ -4,7 +4,13 @@ import { PopupContext } from '../PopUpContext';
 
 const ComicContext = createContext();
 
+const API_URL = "https://xdwvg9no7pefghrn.us-east-1.aws.endpoints.huggingface.cloud";
+const API_KEY= "VknySbLLTUjbxXAXCjyfaFIPwUTCeRXbFSOjwRiCxsxFyhbnGjSFalPKrpvvDAaPVzWEevPljilLVDBiTzfIbWFdxOkYJxnOPoHhkkVGzAknaOulWggusSFewzpqsNWM";
+
 const ComicProvider = ({ children }) => {
+
+
+    const {openPopup, closePopup} = useContext(PopupContext);
 
     const [inputs, setInputs] = useState(['']); // Initialize with one input
     const [images, setImages] = useState([]);
@@ -34,20 +40,23 @@ const ComicProvider = ({ children }) => {
                     setImages(images => [...images, image]);
                 } catch (err) {
                     setError('An error occurred while fetching images.');
+                    openPopup('An error occurred while fetching images.'+err.message, 'error');
                     console.error('API error:', err);
                     break;
                 }
             }
+        }
+        if(error === ''){
+            openPopup('Images fetched successfully!', 'success');
         }
 
         setLoading(false);
     };
 
     const query = async ({ inputs }) => {
-        const API_URL = "https://xdwvg9no7pefghrn.us-east-1.aws.endpoints.huggingface.cloud";
         const headers = {
             "Accept": "image/png",
-            "Authorization": "Bearer VknySbLLTUjbxXAXCjyfaFIPwUTCeRXbFSOjwRiCxsxFyhbnGjSFalPKrpvvDAaPVzWEevPljilLVDBiTzfIbWFdxOkYJxnOPoHhkkVGzAknaOulWggusSFewzpqsNWM", // Replace with your actual API key
+            "Authorization":`Bearer ${API_KEY}`, 
             "Content-Type": "application/json"
         };
 
@@ -64,6 +73,20 @@ const ComicProvider = ({ children }) => {
         return await response.blob();
     };
 
+
+    const reGenerateImage=async (index) => {
+        const input = inputs[index];
+        try {
+            const image = await query({ inputs: input });
+            setImages(images => [...images.slice(0, index), image, ...images.slice(index + 1)]);
+            openPopup("Image re-generated successfully!", 'success')
+        } catch (err) {
+            openPopup("Unable to re-generate image. Please try again later.", 'error')
+            console.error('API error:', err);
+        }
+
+    }
+
     
   //ALL CONTEXT VALUES WHICH ARE EXPORTED
   const contextValues = {
@@ -78,8 +101,7 @@ const ComicProvider = ({ children }) => {
     handleAddInput,
     handleSubmit,
     handleInputChange,
-
-
+    reGenerateImage,
   };
   return <ComicContext.Provider value={contextValues}>{children}</ComicContext.Provider>;
 };
