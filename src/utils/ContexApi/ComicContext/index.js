@@ -1,62 +1,87 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom/dist';
 import { PopupContext } from '../PopUpContext';
 
 
-const AuthContext = createContext();
+const ComicContext = createContext();
 
-const AuthProvider = ({ children }) => {
-  const navigate = useNavigate();
-  const location = useLocation();
-  //PREVIOUS CONTEXTS
-  const { openPopup } = useContext(PopupContext);
+const ComicProvider = ({ children }) => {
 
-
-
-
-  
-//   useEffect(() => {
-//     if(location.pathname==='/repository')
-//       setWorkingInOrg(false);
-//     if(location.pathname==='/orgrepo')
-//       setWorkingInOrg(true);
-//   }, [location.pathname,workingInOrg]);
+    const [inputs, setInputs] = useState(['']); // Initialize with one input
+    const [images, setImages] = useState([]);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState('');
 
 
-//   const handleLogout = () => {
-//     setIsAuthenticated(false);
-//     navigate('/');
-//   };
-//   const handleLogin = async (ownerName, githubToken) => {
-//     showLoader();
-//     try {
-//       const octokit = new Octokit({ auth: githubToken });
-//       const data=await octokit.rest.users.getAuthenticated();
-//       setOwnerDetails(data?.data);
-//       setOctokit(octokit);
-//       setIsAuthenticated(true);
-//     } catch (error) {
-//       openPopup('Error In Token Login!!' +error, 'error');
-//       addActivityData("Error In Token Login", "error", error?.message || error);
-//       setOwnerDetails({});
-//     } finally {
-//       hideLoader();
-//     }
-//   };
-  
+    const handleAddInput = () => {
+        setInputs([...inputs, '']);
+    };
+    const handleInputChange = (index, value) => {
+        const newInputs = [...inputs];
+        newInputs[index] = value;
+        setInputs(newInputs);
+    };
+
+
+    const handleSubmit = async () => {
+        setLoading(true);
+        setError('');
+        setImages([]);
+
+        for (const input of inputs) {
+            if (input) {
+                try {
+                    const image = await query({ inputs: input });
+                    setImages(images => [...images, image]);
+                } catch (err) {
+                    setError('An error occurred while fetching images.');
+                    console.error('API error:', err);
+                    break;
+                }
+            }
+        }
+
+        setLoading(false);
+    };
+
+    const query = async ({ inputs }) => {
+        const API_URL = "https://xdwvg9no7pefghrn.us-east-1.aws.endpoints.huggingface.cloud";
+        const headers = {
+            "Accept": "image/png",
+            "Authorization": "Bearer VknySbLLTUjbxXAXCjyfaFIPwUTCeRXbFSOjwRiCxsxFyhbnGjSFalPKrpvvDAaPVzWEevPljilLVDBiTzfIbWFdxOkYJxnOPoHhkkVGzAknaOulWggusSFewzpqsNWM", // Replace with your actual API key
+            "Content-Type": "application/json"
+        };
+
+        const response = await fetch(API_URL, {
+            method: 'POST',
+            headers: headers,
+            body: JSON.stringify({ inputs })
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        return await response.blob();
+    };
+
+    
   //ALL CONTEXT VALUES WHICH ARE EXPORTED
   const contextValues = {
+    inputs,
+    setInputs,
+    images,
+    setImages,
+    loading,
+    setLoading,
+    error,
+    setError,
+    handleAddInput,
+    handleSubmit,
+    handleInputChange,
 
-    // isAuthenticated,
-    // octokit,
-    // ownerDetails,
-    // workingInOrg,
-
-    // handleLogout,
-    // handleLogin,
 
   };
-  return <AuthContext.Provider value={contextValues}>{children}</AuthContext.Provider>;
+  return <ComicContext.Provider value={contextValues}>{children}</ComicContext.Provider>;
 };
 
-export { AuthContext, AuthProvider };
+export { ComicContext, ComicProvider };
